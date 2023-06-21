@@ -106,11 +106,7 @@ router.patch(
 
       const comment = await Comments.findOne({
         where: {
-          [Op.and]: [
-            { PostId: post.postId },
-            { UserId: post.UserId },
-            { commentId },
-          ],
+          [Op.and]: [{ PostId: post.postId }, { commentId }],
         },
       });
 
@@ -179,11 +175,7 @@ router.delete(
 
       const comment = await Comments.findOne({
         where: {
-          [Op.and]: [
-            { PostId: post.postId },
-            { UserId: post.UserId },
-            { commentId },
-          ],
+          [Op.and]: [{ PostId: post.postId }, { commentId }],
         },
       });
 
