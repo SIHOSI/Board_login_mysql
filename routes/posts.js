@@ -113,7 +113,7 @@ router.patch('/posts/:postId', authMiddleware, async (req, res) => {
       );
     }
 
-    // 업데이트된 게시글을 다시 조회하여 반환, 그냥 post만 반환하면 작동은해도 오류코드가 나와서 넣어줌.
+    // 업데이트된 게시글을 다시 조회하여 반환, 그냥 post로 반환하면 작동은 되는데 오류코드.
     const updatedPost = await Posts.findOne({ where: { postId } });
 
     res.status(201).json({

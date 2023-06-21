@@ -74,6 +74,7 @@ router.get('/posts/:postId/comments', async (req, res) => {
       where: {
         PostId: post.postId,
       },
+      order: [['createdAt', 'desc']],
     });
 
     res.status(200).json({ all_Comments: comments });
@@ -89,41 +90,58 @@ router.patch(
   authMiddleware,
   async (req, res) => {
     const { postId, commentId } = req.params;
-    const { commentcontent } = req.body;
+    const { commentContent } = req.body;
     const { user } = res.locals;
 
     try {
-      if (!mongoose.isValidObjectId(postId)) {
+      if (!Number.isInteger(Number(postId))) {
         return res.status(400).json({ errorMessage: '유효하지 않은 게시글ID' });
       }
 
-      const post = await Post.findById(postId);
+      const post = await Posts.findOne({ where: { postId } });
 
       if (!post) {
         return res.status(400).json({ errorMessage: '존재하지 않는 게시글ID' });
       }
 
-      if (!mongoose.isValidObjectId(commentId)) {
+      const comment = await Comments.findOne({ where: { PostId: postId } });
+
+      if (!Number.isInteger(Number(commentId))) {
         return res.status(400).json({ errorMessage: '유효하지 않은 댓글ID' });
       }
-
-      const comment = await Comment.findById(commentId);
 
       if (!comment) {
         return res.status(400).json({ errorMessage: '존재하지 않는 댓글ID' });
       }
 
-      if (!commentcontent) {
+      if (user.userId !== comment.UserId) {
+        return res.status(400).json({ errorMessage: '권한이 없습니다.' });
+      }
+
+      if (!commentContent) {
         return res.status(400).json({ errorMessage: '댓글을 입력해주세요.' });
       } else {
-        comment.commentcontent = commentcontent;
-        comment.syncTime = Date.now();
-        await comment.save();
+        await Comments.update(
+          { commentContent },
+          {
+            where: {
+              [Op.and]: [
+                { PostId: post.postId },
+                { UserId: user.userId },
+                { commentId },
+              ],
+            },
+          }
+        );
       }
+
+      const updatedComment = await Comments.findOne({
+        where: { PostId: postId },
+      });
 
       res.status(201).json({
         success: true,
-        comment: comment,
+        comment: updatedComment,
       });
     } catch (error) {
       console.error(error);
