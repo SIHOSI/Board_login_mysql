@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const User = require('../schemas/user');
+const { User } = require('../models');
 
 const authMiddleware = async (req, res, next) => {
   // console.log(req.cookies);
@@ -14,8 +14,10 @@ const authMiddleware = async (req, res, next) => {
   }
 
   try {
-    const { userId } = jwt.verify(authToken, 'custom-secret-key');
-    const user = await User.findById(userId);
+    const decodedToken = jwt.verify(authToken, 'custom-secret-key');
+    const user = await User.findOne({
+      where: { decodedToken: decodedToken.userId },
+    });
     if (!user) {
       return res.status(401).send({
         errorMessage: '유효한 사용자가 아닙니다.',
