@@ -144,7 +144,7 @@ router.patch(
       }
 
       const updatedComment = await Comments.findOne({
-        where: { PostId: postId },
+        where: { PostId: postId, commentId: commentId },
       });
 
       res.status(201).json({
