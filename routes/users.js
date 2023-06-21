@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const User = require('../schemas/user');
+const { Users } = require('../models');
 const authMiddleware = require('../middlewares/auth-middleware');
 
 // 회원가입 API
@@ -16,7 +16,7 @@ router.post('/auth/register', async (req, res) => {
   }
 
   // nickname이 이미 사용 중인지 확인
-  const existingUser = await User.findOne({ nickname });
+  const existingUser = await Users.findOne({ where: { nickname } });
   if (existingUser) {
     res.status(400).json({
       errorMessage: '닉네임이 이미 사용 중입니다.',
@@ -24,8 +24,7 @@ router.post('/auth/register', async (req, res) => {
     return;
   }
 
-  const user = new User({ nickname, password });
-  await user.save();
+  await Users.create({ nickname, password });
 
   res.status(201).json({ success: true });
 });
