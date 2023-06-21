@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register</title>
+  </head>
+  <body>
+    <main>
+      <form class="register">
+        <input type="text" id="inputNickname" placeholder="닉네임" autofocus />
+        <input type="password" id="inputPassword" placeholder="비밀번호" />
+        <input
+          type="password"
+          id="inputConfirmPassword"
+          placeholder="비밀번호 확인"
+        />
+        <p
+          class="errorMessage"
+          id="nicknameError"
+          style="display: none; color: red"
+        >
+          닉네임은 최소 3자 이상입니다.
+        </p>
+        <p
+          class="errorMessage"
+          id="passwordLengthError"
+          style="display: none; color: red"
+        >
+          비밀번호는 최소 4자 이상입니다.
+        </p>
+        <p
+          class="errorMessage"
+          id="passwordMatchError"
+          style="display: none; color: red"
+        >
+          비밀번호와 비밀번호 확인이 일치하지 않습니다.
+        </p>
+        <p
+          class="errorMessage"
+          id="passwordIncludeError"
+          style="display: none; color: red"
+        >
+          비밀번호에 닉네임이 포함되어 있습니다.
+        </p>
+        <input type="submit" value="회원가입" />
+      </form>
+    </main>
+  </body>
+
+  <script>
+    document
+      .querySelector('.register')
+      .addEventListener('submit', async function (event) {
+        event.preventDefault(); // 폼의 기본 제출 동작 막기
+
+        const nickname = document.getElementById('inputNickname').value;
+        const password = document.getElementById('inputPassword').value;
+        const confirmPassword = document.getElementById(
+          'inputConfirmPassword'
+        ).value;
+
+        const nicknameError = document.getElementById('nicknameError');
+        const passwordLengthError = document.getElementById(
+          'passwordLengthError'
+        );
+        const passwordMatchError =
+          document.getElementById('passwordMatchError');
+        const passwordIncludeError = document.getElementById(
+          'passwordIncludeError'
+        );
+
+        nicknameError.style.display = 'none';
+        passwordLengthError.style.display = 'none';
+        passwordMatchError.style.display = 'none';
+        passwordIncludeError.style.display = 'none';
+
+        // 닉네임 유효성 검사
+        if (nickname.length < 3) {
+          nicknameError.style.display = 'block';
+          return;
+        }
+
+        // 비밀번호 유효성 검사
+        if (password.length < 4) {
+          passwordLengthError.style.display = 'block';
+          return;
+        }
+
+        // 비밀번호와 비밀번호 확인 일치 여부 확인
+        if (password !== confirmPassword) {
+          passwordMatchError.style.display = 'block';
+          return;
+        }
+
+        // 비밀번호에 닉네임이 포함되어 있는지 확인
+        if (password.includes(nickname)) {
+          passwordIncludeError.style.display = 'block';
+          return;
+        }
+
+        try {
+          const response = await fetch('/api/auth/register', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              nickname: nickname,
+              password: password,
+              confirmPassword: confirmPassword,
+            }),
+          });
+          console.log(response);
+
+          const data = await response.json();
+
+          if (response.ok) {
+            // 회원가입 성공한 경우
+            window.location.replace('/');
+          } else {
+            // 회원가입 실패한 경우
+            // 실패 원인에 따라 오류 메시지 표시
+            if (data.errorMessage) {
+              if (
+                data.errorMessage ===
+                '비밀번호와 비밀번호 확인이 일치하지 않습니다.'
+              ) {
+                passwordMatchError.textContent = data.errorMessage;
+                passwordMatchError.style.display = 'block';
+              } else if (data.errorMessage === '닉네임이 이미 사용 중입니다.') {
+                nicknameError.textContent = data.errorMessage;
+                nicknameError.style.display = 'block';
+              } else {
+                passwordIncludeError.textContent = data.errorMessage;
+                passwordIncludeError.style.display = 'block';
+              }
+            }
+          }
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      });
+  </script>
+</html>
