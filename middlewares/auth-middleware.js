@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { User } = require('../models');
+const { Users } = require('../models');
 
 const authMiddleware = async (req, res, next) => {
   // console.log(req.cookies);
@@ -15,7 +15,7 @@ const authMiddleware = async (req, res, next) => {
 
   try {
     const decodedToken = jwt.verify(authToken, 'custom-secret-key');
-    const user = await User.findOne({
+    const user = await Users.findOne({
       where: { decodedToken: decodedToken.userId },
     });
     if (!user) {
