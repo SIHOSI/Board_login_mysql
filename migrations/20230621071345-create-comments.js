@@ -20,6 +20,10 @@ module.exports = {
       PostId: {
         allowNull: false,
         type: Sequelize.INTEGER,
+        references: {
+          model: 'Posts',
+          key: 'postId',
+        },
       },
       commentContent: {
         allowNull: false,

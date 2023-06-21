@@ -34,6 +34,10 @@ module.exports = (sequelize, DataTypes) => {
           model: 'Users',
           key: 'userId',
         },
+        references: {
+          model: 'Posts',
+          key: 'postId',
+        },
       },
       PostId: {
         allowNull: false,

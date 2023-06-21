@@ -34,6 +34,9 @@ router.post('/posts', authMiddleware, async (req, res) => {
       UserId: user.userId,
     });
     // console.log(post);
+
+    // const updatedPost = await Posts.findOne({ where: { postId } });
+
     res.status(201).json({
       success: true,
       post: post,
