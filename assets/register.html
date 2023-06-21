@@ -111,9 +111,21 @@
               confirmPassword: confirmPassword,
             }),
           });
-          console.log(response);
+          // console.log(response);
+          // Response {type: 'basic', url: 'http://localhost:3000/api/auth/register', redirected: false, status: 400, ok: false, …}
+          // body: (...)
+          // bodyUsed: true
+          // headers: Headers
+          //     [[Prototype]]: Headers
+          // ok: false
+          // redirected: false
+          // status: 400
+          // statusText: "Bad Request"
+          // type: "basic"
+          // url: "http://localhost:3000/api/auth/register"
 
           const data = await response.json();
+          console.log(data);
 
           if (response.ok) {
             // 회원가입 성공한 경우

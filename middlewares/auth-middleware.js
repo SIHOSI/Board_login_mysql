@@ -16,7 +16,7 @@ const authMiddleware = async (req, res, next) => {
   try {
     const decodedToken = jwt.verify(authToken, 'custom-secret-key');
     const user = await Users.findOne({
-      where: { decodedToken: decodedToken.userId },
+      where: { userId: decodedToken.userId },
     });
     if (!user) {
       return res.status(401).send({

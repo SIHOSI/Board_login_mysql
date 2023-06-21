@@ -1,8 +1,7 @@
-// const express = require('express');
-// const mongoose = require('mongoose');
-// const router = express.Router();
-// const authMiddleware = require('../middlewares/auth-middleware');
-// const Post = require('../schemas/post');
+const express = require('express');
+const router = express.Router();
+const authMiddleware = require('../middlewares/auth-middleware');
+const { Posts, Users } = require('../models');
 
 // // 전체 게시글 목록 조회 API
 // router.get('/posts', async (req, res) => {
@@ -15,32 +14,31 @@
 //   }
 // });
 
-// // 게시글 작성 API
-// router.post('/posts', authMiddleware, async (req, res) => {
-//   const { title, content } = req.body;
-//   // console.log(res.locals);
-//   const { user } = res.locals;
+// 게시글 작성 API
+router.post('/posts', authMiddleware, async (req, res) => {
+  const { title, content } = req.body;
+  console.log(title, content);
+  // console.log(res.locals);
+  const { user } = res.locals;
 
-//   // console.log(user);
+  console.log(user);
 
-//   try {
-//     const post = new Post({
-//       title,
-//       content,
-//       nicknameId: user._id,
-//       nickname: user.nickname,
-//     });
-//     console.log(post);
-//     await post.save();
-//     res.status(201).json({
-//       success: true,
-//       post: post,
-//     });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ errorMessage: '서버 에러' });
-//   }
-// });
+  try {
+    const post = await Posts.create({
+      title: title,
+      content: content,
+      UserId: user.userId,
+    });
+    console.log(post);
+    res.status(201).json({
+      success: true,
+      post: post,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ errorMessage: '서버 에러' });
+  }
+});
 
 // //게시글 조회
 // router.get('/posts/:postId', authMiddleware, async (req, res) => {
@@ -129,4 +127,4 @@
 //   }
 // });
 
-// module.exports = router;
+module.exports = router;
