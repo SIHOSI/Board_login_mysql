@@ -3,16 +3,18 @@ const router = express.Router();
 const authMiddleware = require('../middlewares/auth-middleware');
 const { Posts, Users } = require('../models');
 
-// // 전체 게시글 목록 조회 API
-// router.get('/posts', async (req, res) => {
-//   try {
-//     const posts = await Post.find().sort({ syncTime: -1 });
-//     res.status(200).json({ all_Posts: posts });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ errorMessage: '서버 에러' });
-//   }
-// });
+// 전체 게시글 목록 조회 API
+router.get('/posts', async (req, res) => {
+  try {
+    const posts = await Posts.findAll({
+      order: [['createdAt', 'desc']],
+    });
+    res.status(200).json({ all_Posts: posts });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ errorMessage: '서버 에러' });
+  }
+});
 
 // 게시글 작성 API
 router.post('/posts', authMiddleware, async (req, res) => {
