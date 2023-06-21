@@ -7,6 +7,7 @@ const { Posts, Users } = require('../models');
 router.get('/posts', async (req, res) => {
   try {
     const posts = await Posts.findAll({
+      attributes: ['postId', 'UserId', 'title', 'createdAt', 'updatedAt'],
       order: [['createdAt', 'desc']],
     });
     res.status(200).json({ all_Posts: posts });
@@ -27,8 +28,8 @@ router.post('/posts', authMiddleware, async (req, res) => {
 
   try {
     const post = await Posts.create({
-      title: title,
-      content: content,
+      title,
+      content,
       UserId: user.userId,
     });
     console.log(post);
@@ -42,27 +43,29 @@ router.post('/posts', authMiddleware, async (req, res) => {
   }
 });
 
-// //게시글 조회
-// router.get('/posts/:postId', authMiddleware, async (req, res) => {
-//   const { postId } = req.params;
+//게시글 조회
+router.get('/posts/:postId', authMiddleware, async (req, res) => {
+  const { postId } = req.params;
 
-//   try {
-//     if (!mongoose.isValidObjectId(postId)) {
-//       return res.status(400).json({ errorMessage: '유효하지 않은 게시글ID' });
-//     }
+  try {
+    if (!Number.isInteger(Number(postId))) {
+      return res.status(400).json({ errorMessage: '유효하지 않은 게시글ID' });
+    }
 
-//     const post = await Post.findById(postId);
+    const post = await Posts.findOne({
+      where: { postId },
+    });
 
-//     if (!post) {
-//       return res.status(400).json({ errorMessage: '존재하지 않는 게시글ID' });
-//     }
+    if (!post) {
+      return res.status(400).json({ errorMessage: '존재하지 않는 게시글ID' });
+    }
 
-//     res.status(200).json({ Post: post });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ errorMessage: '서버 에러' });
-//   }
-// });
+    res.status(200).json({ Post: post });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ errorMessage: '서버 에러' });
+  }
+});
 
 // //게시글 수정
 // router.patch('/posts/:postId', async (req, res) => {
