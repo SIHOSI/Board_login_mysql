@@ -9,10 +9,10 @@ const path = require('path'); // url 뒤에 .html 오는게 거슬려서 추가 
 const app = express();
 const port = 3000;
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static('assets'));
+app.use(express.json()); // json형식의 요청을 파싱, json형식으로 이루어진 request Body를 받기 위해
+app.use(express.urlencoded({ extended: false })); // html 에서 form 으로 제출된 request 받기 위해
+app.use(cookieParser()); //req.cookie 객체를 통해 클라로부터 전송된 쿠키에 접근 하기 위해, 이를 이용해서 인증, 세션등
+app.use(express.static('assets')); //정적파일 사용하기 위해, assets의 html, css, js, 이미지 등
 app.get('/register', (req, res) => {
   const filePath = path.join(__dirname, 'assets', 'register.html');
   res.sendFile(filePath);

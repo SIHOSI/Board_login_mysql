@@ -18,7 +18,7 @@ router.post('/auth', async (req, res) => {
   }
 
   const token = jwt.sign({ userId: user.userId }, 'custom-secret-key');
-
+  //jwt.sign 함수를 이용해서 user.userId를 토큰의 페이로드에 저장
   res.cookie('Authorization', `Bearer ${token}`); // JWT를 Cookie로 할당합니다!
   res.status(200).json({ token }); // JWT를 Body로 할당합니다!
 });

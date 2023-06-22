@@ -22,10 +22,91 @@ router.get('/posts', async (req, res) => {
 router.post('/posts', authMiddleware, async (req, res) => {
   const { title, content } = req.body;
   // console.log(title, content);
-  // console.log(res.locals);
   const { user } = res.locals;
-
+  // console.log(res.locals);
+  // [Object: null prototype] {
+  //   user: Users {
+  //     dataValues: {
+  //       userId: 1,
+  //       nickname: '1111',
+  //       password: '2222',
+  //       createdAt: 2023-06-21T08:46:12.000Z,
+  //       updatedAt: 2023-06-21T08:46:12.000Z
+  //     },
+  //     _previousDataValues: {
+  //       userId: 1,
+  //       nickname: '1111',
+  //       password: '2222',
+  //       createdAt: 2023-06-21T08:46:12.000Z,
+  //       updatedAt: 2023-06-21T08:46:12.000Z
+  //     },
+  //     uniqno: 1,
+  //     _changed: Set(0) {},
+  //     _options: {
+  //       isNewRecord: false,
+  //       _schema: null,
+  //       _schemaDelimiter: '',
+  //       raw: true,
+  //       attributes: [Array]
+  //     },
+  //     isNewRecord: false
+  //   }
+  // }
+  // console.log('---------------------');
   // console.log(user);
+  // Users {
+  //   dataValues: {
+  //     userId: 1,
+  //     nickname: '1111',
+  //     password: '2222',
+  //     createdAt: 2023-06-21T08:46:12.000Z,
+  //     updatedAt: 2023-06-21T08:46:12.000Z
+  //   },
+  //   _previousDataValues: {
+  //     userId: 1,
+  //     nickname: '1111',
+  //     password: '2222',
+  //     createdAt: 2023-06-21T08:46:12.000Z,
+  //     updatedAt: 2023-06-21T08:46:12.000Z
+  //   },
+  //   uniqno: 1,
+  //   _changed: Set(0) {},
+  //   _options: {
+  //     isNewRecord: false,
+  //     _schema: null,
+  //     _schemaDelimiter: '',
+  //     raw: true,
+  //     attributes: [ 'userId', 'nickname', 'password', 'createdAt', 'updatedAt' ]
+  //   },
+  //   isNewRecord: false
+  // }
+  // console.log(res.locals.user);
+  // Users {
+  //   dataValues: {
+  //     userId: 1,
+  //     nickname: '1111',
+  //     password: '2222',
+  //     createdAt: 2023-06-21T08:46:12.000Z,
+  //     updatedAt: 2023-06-21T08:46:12.000Z
+  //   },
+  //   _previousDataValues: {
+  //     userId: 1,
+  //     nickname: '1111',
+  //     password: '2222',
+  //     createdAt: 2023-06-21T08:46:12.000Z,
+  //     updatedAt: 2023-06-21T08:46:12.000Z
+  //   },
+  //   uniqno: 1,
+  //   _changed: Set(0) {},
+  //   _options: {
+  //     isNewRecord: false,
+  //     _schema: null,
+  //     _schemaDelimiter: '',
+  //     raw: true,
+  //     attributes: [ 'userId', 'nickname', 'password', 'createdAt', 'updatedAt' ]
+  //   },
+  //   isNewRecord: false
+  // }
 
   try {
     const post = await Posts.create({
