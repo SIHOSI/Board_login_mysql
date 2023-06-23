@@ -1,7 +1,7 @@
 {
   "development": {
-    "username": "admin",
-    "password": "Dbstlgh9875!",
+    "username": "",
+    "password": "",
     "database": "Board",
     "host": "express-database.cnqinvvba3rx.ap-northeast-2.rds.amazonaws.com",
     "dialect": "mysql"
